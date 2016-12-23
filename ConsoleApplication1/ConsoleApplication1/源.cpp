@@ -6,9 +6,13 @@ typedef struct LNode
 	struct LNode * next;
 }LNode,* Linklist;
 void GetElem(Linklist L,int i,int &e);
+void ListInsert(Linklist &L,int i,int e);
 int main() {
 	return 0;
 }
 void GetElem(Linklist L,int i,int &e) {
+
+}
+void ListInsert(Linklist &L, int i, int e) {
 
 }
