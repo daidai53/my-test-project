@@ -1,93 +1,56 @@
 #include<stdio.h>
 #include<stdlib.h>
-typedef struct LNode
+#define maxsize 100
+typedef struct sqQueue
 {
-	int data;
-	struct LNode * next;
-}LNode,* Linklist;
-void GetElem(Linklist L,int i,int &e);
-void ListInsert(Linklist &L,int i,int e);
-void ListDelete(Linklist &L,int i,int & e);
-void CreateList(Linklist &L,int n);
-void print(Linklist L);
+	int * base;
+	int front,rear;
+};
+bool Initqueue(sqQueue &q) {
+	q.base = (int *)malloc(maxsize*sizeof(int));
+	if (!q.base)return false;
+	q.front = q.rear = 0;
+	return true;
+}
+int length(sqQueue q) {
+	return (q.rear-q.front+maxsize)%maxsize;
+}
+bool enqueue(sqQueue &q,int e) {
+	if ((q.rear + 1) % maxsize == q.front)return false;
+	q.base[q.rear] = e;
+	q.rear = (q.rear + 1) % maxsize;
+	return true;
+}
+bool dequeue(sqQueue &q,int &e) {
+	if (q.front == q.rear)
+		return false;
+	e = q.base[q.front];
+	q.front = (q.front + 1) % maxsize;
+	return true;
+}
 int main() {
-	int n,e;
-	Linklist l;
-	printf("请输入链表长度：");
+	int i, n, t;
+	sqQueue q;
+	if (Initqueue(q))
+		printf("succeed\n");
+	else
+		printf("failed\n");
+	printf("length%d\n",length(q));
+	printf("enter n:");
 	scanf("%d",&n);
-	CreateList(l,n);
-	print(l);
-	GetElem(l,5,e);
-	printf("第五个元素为%d\n",e);
-	ListInsert(l,5,20);
-	print(l);
-	GetElem(l, 5, e);
-	printf("第五个元素为%d\n", e);
-	ListDelete(l,5,e);
-	printf("deleted %d\n",e);
-	print(l);
-	GetElem(l, 5, e);
-	printf("第五个元素为%d\n", e);
-	return 0;
-}
-void GetElem(Linklist L,int i,int &e) {
-	int j = 1;
-	Linklist p = L->next;
-	while (j != i) {
-		p = p->next;
-		j++;
-	}
-	e = p->data;
-}
-void ListInsert(Linklist &L, int i, int e) {
-	Linklist p = L;
-	Linklist s;
-	int j = 0;
-	while (j < i-1) {
-		p = p->next;
-		j++;
-	}
-	if (j <= i) {
-		s = (Linklist)malloc(sizeof(LNode));
-		s->data = e;
-		s->next = p->next;
-		p->next = s;
+	for (i = 0;i < n;i++) {
+		scanf("%d",&t);
+		if (!enqueue(q, t))
+			printf("full");
+	}printf("length%d\n", length(q));
+	printf("delete the head\n");
+	if (dequeue(q, t)) {
+		printf("%dhas been deleted\n", t);
+		printf("length%d\n", length(q));
 	}
 	else {
-		exit(0);
+		printf("empty\n");
+		printf("length%d\n", length(q));
 	}
-}
-void ListDelete(Linklist &L, int i, int & e) {
-	Linklist p = L;
-	int j = 0;
-	while (j < i - 1) {
-		j++;
-		p = p->next;
-	}
-	Linklist s = p->next;
-	p->next = s->next;
-	free(s);
-}
-
-void CreateList(Linklist & L, int n){
-	L = (Linklist)malloc(sizeof(LNode));
-	L->next = NULL;
-	Linklist p;
-	printf("请逆序输入单链表的各个元素:\n");
-	for (int i = 0;i < n;i++) {
-		p = (Linklist)malloc(sizeof(LNode));
-		p->next = L->next;
-		L->next = p;
-		scanf("%d",&p->data);
-	}
-}
-
-void print(Linklist L){
-	Linklist p;
-	p = L->next;
-	while (p != NULL) {
-		printf("%d ",p->data);
-		p = p->next;
-	}
-	printf("\n");
+	return 0;
 }
