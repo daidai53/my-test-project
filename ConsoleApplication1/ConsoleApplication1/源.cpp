@@ -2,56 +2,50 @@
 #include<iostream>
 #include<stdlib.h>
 using namespace std;
-#define maxsize 1000
-//稀疏矩阵的转置
-typedef struct triple
-{
-	int i, j;
-	int e;
-};
-typedef struct TSMatrix {
-	triple data[maxsize];
-	int mu, nu, tu;
-};
+//二叉树链式存储
+typedef struct BiTNode{
+	char data;
+	struct BiTNode * lchild, * rchild;
+}BiTNode, *BiTree;
 
-void print(TSMatrix ts) {
-	int a;
-	int b[100][100];
-	for (int m = 0; m <ts.mu; m++)
-		for (int n = 0; n <ts.nu; n++)
-			b[m][n] = 0;
-	for (a = 0; a < ts.tu; a++) {
-		b[ts.data[a].i][ts.data[a].j] = ts.data[a].e;
+int createbitree(BiTree &T) {
+	char ch;
+	cin >> ch;
+	if (ch == '`')T = NULL;
+	else {
+		T = (BiTree)malloc(sizeof(BiTNode));
+		T->data = ch;
+		createbitree(T->lchild);
+		createbitree(T->rchild);
 	}
-	for (int m = 0; m < ts.mu; m++) {
-		for (int n = 0; n < ts.nu; n++)
-			printf("%d ", b[m][n]);
-		printf("\n");
-	}
+	return 1;
 }
-void transpose(TSMatrix ts, TSMatrix &st) {
-	st.mu = ts.nu;
-	st.nu = ts.mu;
-	st.tu = ts.tu;
-	for (int m = 0; m < ts.tu; m++) {
-		st.data[m].e = ts.data[m].e;
-		st.data[m].i = ts.data[m].j;
-		st.data[m].j = ts.data[m].i;
+int Visit(char data) {
+	printf("%c ",data);
+	return 1;
+}
+int PreOrderTranverse(BiTree T, int(* Visit)(char data)) {
+	if (T) {
+		if (Visit(T->data)) {
+			if (PreOrderTranverse(T->lchild, Visit))
+				if (PreOrderTranverse(T->rchild, Visit))
+					return 1;
+			return 0;
+		}
+	}
+	else
+	{
+		return 1;
 	}
 }
 int main() {
-	TSMatrix ts,st;
-	ts.mu = 5;
-	ts.nu = 3;
-	ts.tu = 2;
-	ts.data[0].e = 3;
-	ts.data[0].i = 1;
-	ts.data[0].j = 2;
-	ts.data[1].e = 1;
-	ts.data[1].i = 0;
-	ts.data[1].j = 0;
-	print(ts);
-	transpose(ts,st);
-	print(st);
+	BiTree bt;
+	printf("输入二叉树的每个结点，“`”代表空\n");
+	if (createbitree(bt))
+		printf("创建成功\n");
+	else
+		printf("创建失败\n");
+	if (!PreOrderTranverse(bt,Visit))
+		printf("failed\n");
 	return 0;
 }
