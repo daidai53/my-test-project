@@ -44,30 +44,33 @@ int PreOrderTranverse(BiTree T, int(* Visit)(char data)) {
 	}
 }
 void InitStack(Stack &S) {
-	S.base = (BiTree *)malloc(100 * sizeof(BiTree));
+	S.base = (BiTree *)malloc(100 * sizeof(BiTNode));
 	if (!S.base)exit(0);
 	S.top = S.base;
 	S.stacksize = 100;
 }
 bool StackEmpty(Stack S) {
-	BiTree *p;
+	BiTree p;
 	int i;
 	i = S.stacksize;
-	p = S.base;
+	p = *S.base;
 	while (i--) {
-		if (*p != NULL)
+		if (p != NULL)
 			return false;
 	}
 	return true;
 }
+
 int GetTop(Stack S, BiTree &e) {
-	BiTree *p;
-	p = S.top--;
-	e = *p;
+	BiTree p;
+	S.top--;
+	p = *S.top;
+	e = p;
 	return 1;
 }
 void Push(Stack &S, BiTree e) {
-	*S.top++ = e;
+	*S.top = e;
+	S.top++;
 }
 void Pop(Stack &S, BiTree &e) {
 	S.top--;
@@ -92,6 +95,21 @@ int inordertranverse(BiTree T,int (* Visit)(char data)) {
 	return 1;
 }
 int main() {
+	Stack SS;
+	BiTree bb,cc,dd;
+	bb = (BiTree)malloc(sizeof(BiTNode));
+	cc = (BiTree)malloc(sizeof(BiTNode));
+	dd = (BiTree)malloc(sizeof(BiTNode));
+	InitStack(SS);
+	bb->data = '1';
+	Push(SS,bb);
+	bb->data = '2';
+	Push(SS, bb);
+	Pop(SS,cc);
+	printf("%c",cc->data);
+	Pop(SS, dd);
+	Pop(SS,dd);
+	printf("%c", dd->data);
 	BiTree bt;
 	printf("输入二叉树的每个结点，“`”代表空\n");
 	if (createbitree(bt))
