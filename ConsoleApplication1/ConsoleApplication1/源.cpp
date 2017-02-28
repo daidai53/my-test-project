@@ -17,7 +17,10 @@ typedef struct {
 }migong;
 
 void init_map(migong Map) {
-
+	printf("请输入迷宫高度（不包括边界）：");
+	scanf("%d",&Map.sizex);
+	printf("请输入迷宫宽度：");
+	scanf("%d", &Map.sizey);
 }
 int main() {
 	return 0;
